@@ -1,0 +1,548 @@
+                <div>
+                    <label>Image:</label>
+                    <input
+                        type="file"
+                        value={image}
+                        onChange={(e) => setImage(e.target.value)}
+                    />
+                </div>
+                <br />
+
+                import "./item.css";
+import React, { useState, useEffect } from 'react';
+import api from '../services/api';
+
+function Item() {
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    price: '',
+    bidstep: '',
+    category: '',
+    image: null,
+  });
+
+  const [auction, setAuction] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState('');
+
+  useEffect(() => {
+    const fetchAuctionId = async () => {
+      try {
+        const response = await api.get('/items');
+        setAuction(response.data.auctionId);
+      } catch (error) {
+        console.error('Error fetching auctionId:', error);
+      }
+    };
+
+    fetchAuctionId();
+  }, []);
+
+  const clearForm = () => {
+    setFormData({
+      name: '',
+      description: '',
+      price: '',
+      bidstep: '',
+      category: '',
+      image: null,
+    });
+  };
+
+  const handleFileChange = (e) => {
+    setFormData({
+      ...formData,
+      image: e.target.files[0],
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+
+    try {
+      const data = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        data.append(key, value);
+      });
+
+      const response = await api.post('/items', data);
+      const newAuctionId = response.data.id;
+      setAuction(newAuctionId);
+      setSuccessMessage('Item created successfully!');
+      setError(null);
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error creating item:', error.response ? error.response.data : error.message);
+      setError('Failed to create item. Please try again.');
+      setSuccessMessage('');
+    } finally {
+      setSubmitting(false);
+      clearForm();
+    }
+  };
+
+  return (
+
+
+
+import "./item.css";
+import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useRef } from 'react';
+import api from '../services/api';
+
+function Item() {
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
+    const [price, setPrice] = useState('');
+    const [bidstep, setBidstep] = useState('');
+    const [category, setCategory] = useState('');
+    const [image, setImage] = useState('');
+    const [auction, setAuction] = useState('');
+    const [submitting, setSubmitting] = useState(false);
+    const [error, setError] = useState(null);
+    const [successMessage, setSuccessMessage] = useState('');
+
+    function clearForm() {
+        setName('');
+        setDescription('');
+        setPrice('');
+        setBidstep('');
+        setCategory('');
+        setImage('');
+        setAuction(''); 
+
+        const input = document.querySelector('input[type="file"]');
+        if (input) {
+        input.value = ''; 
+        }
+    }
+
+    useEffect(() => {
+        const fetchAuctionId = async () => {
+            try {
+                const response = await api.get('/items'); 
+                setAuction(response.data.auctionId);
+            } catch (error) {
+                console.error('Error fetching auctionId:', error);
+            }
+        };
+
+        fetchAuctionId(); 
+    }, []);
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        setSubmitting(true);
+        api.post('/items', { name, description, price, bidstep, category, image, auction }).then((response) => {
+            const newAuctionId = response.data.id;
+            setAuction(newAuctionId);
+            setSuccessMessage('Item created successfully!');
+            setError(null);
+            console.log(response.data);
+        })
+            .catch((error) => {
+                console.error('Error creating item:', error.response.data);
+                setError('Failed to create item. Please try again.');
+                setSuccessMessage('');
+            })
+            .finally(() => {
+                setSubmitting(false);
+                clearForm();
+            });
+    };
+
+
+    return (
+        <div>
+            <h2>Add Item</h2>
+            <form id="itemForm" onSubmit={handleSubmit}>
+                <label>Name:</label>
+                <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                />
+                <br />
+
+                <label>Description:</label>
+                <input
+                    type="text"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                />
+                <br />
+
+                <label>Price:</label>
+                <input
+                    type="number" placeholder='$'
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                />
+                <br />
+
+                <label>Bid Increment:</label>
+                <input
+                    type="number" placeholder='$'
+                    value={bidstep}
+                    onChange={(e) => setBidstep(e.target.value)}
+                />
+                <br />
+
+                <label>Category:</label>
+                <input
+                    type="text"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                />
+                <br />
+
+                <label>Image:</label>
+                <input
+                    type="file"
+                    onChange={(e) => setImage(e.target.files[0])}
+                />
+                <br />
+
+
+                <button type="submit" disabled={submitting}>Submit</button>
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+                {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+            </form>
+        </div>
+    );
+}
+
+
+export default Item;
+
+
+import "./item.css";
+import React, { useState, useEffect } from 'react';
+import api from '../services/api';
+
+function Item() {
+    const [formData, setFormData] = useState({
+        name: '',
+        description: '',
+        price: '',
+        bidstep: '',
+        category: '',
+        image: null,
+        auction: '',
+    });
+
+    const [auction, setAuction] = useState('');
+    const [submitting, setSubmitting] = useState(false);
+    const [error, setError] = useState(null);
+    const [successMessage, setSuccessMessage] = useState('');
+
+    useEffect(() => {
+        const fetchAuctionId = async () => {
+            try {
+                const response = await api.get('/items');
+                setAuction(response.data.auctionId);
+            } catch (error) {
+                console.error('Error fetching auctionId:', error);
+            }
+        };
+
+        fetchAuctionId();
+    }, []);
+
+    const clearForm = () => {
+        setFormData({
+            name: '',
+            description: '',
+            price: '',
+            bidstep: '',
+            category: '',
+            image: null,
+        });
+    };
+
+    const handleFileChange = (e) => {
+        setFormData({
+            ...formData,
+            image: e.target.files[0],
+        });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setSubmitting(true);
+
+        const { name, description, price, bidstep, category, image, auction } = formData;
+
+        api.post('/items', { name, description, price, bidstep, category, image, auction })
+          .then((response) => {
+            const newAuctionId = response.data.id;
+            setFormData({ ...formData, auction: newAuctionId }); // Update auction in formData
+            setSuccessMessage('Item created successfully!');
+            setError(null);
+            console.log(response.data);
+          })
+          .catch((error) => {
+            console.error('Error creating item:', error.response.data);
+            setError('Failed to create item. Please try again.');
+            setSuccessMessage('');
+          })
+          .finally(() => {
+            setSubmitting(false);
+            clearForm();
+          });
+      };
+
+        try {
+            const data = new FormData();
+            Object.entries(formData).forEach(([key, value]) => {
+                data.append(key, value);
+            });
+
+            const response = await api.post('/items', data);
+            const newAuctionId = response.data.id;
+            setAuction(newAuctionId);
+            setSuccessMessage('Item created successfully!');
+            setError(null);
+            console.log(response.data);
+        } catch (error) {
+            console.error('Error creating item:', error.response ? error.response.data : error.message);
+            setError('Failed to create item. Please try again.');
+            setSuccessMessage('');
+        } finally {
+            setSubmitting(false);
+            clearForm();
+        }
+    };
+
+    return (
+        <div>
+            <h2>Add Item</h2>
+            <form id="itemForm" onSubmit={handleSubmit}>
+                <label>Name:</label>
+                <input
+                    type="text"
+                    value={formData.itemName}
+                    onChange={(e) => setFormData({ ...formData, itemName: e.target.value })}
+                />
+                <br />
+
+                <label>Description:</label>
+                <input
+                    type="text"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                />
+                <br />
+
+                <label>Price:</label>
+                <input
+                    type="number" placeholder='$'
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                />
+                <br />
+
+                <label>Bid Increment:</label>
+                <input
+                    type="number" placeholder='$'
+                    value={bidstep}
+                    onChange={(e) => setBidstep(e.target.value)}
+                />
+                <br />
+
+                <label>Category:</label>
+                <input
+                    type="text"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                />
+                <br />
+
+                <label>Image:</label>
+                <input type="file" onChange={handleFileChange} />
+                <br />
+
+                <button type="submit" disabled={submitting}>
+                    Submit
+                </button>
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+                {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+            </form>
+        </div>
+    );
+
+export default Item;
+
+import React, { useState } from "react";
+import api from "../services/api";
+import "./create.css";
+import { Link } from "react-router-dom";
+
+function Create() {
+    const [title, setTitle] = useState("");
+    const [goal, setGoal] = useState("");
+    const [startdate, setStartdate] = useState("");
+    const [enddate, setEnddate] = useState("");
+    const [starttime, setStarttime] = useState("");
+    const [endtime, setEndtime] = useState("");
+    const [description, setDescription] = useState("");
+    const [image, setImage] = useState("");
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        api
+            .post("/auctions", {
+                title,
+                goal,
+                startdate,
+                enddate,
+                starttime,
+                endtime,
+                description,
+            })
+            .then((response) => {
+                console.log(response.data);
+            })
+            .catch((error) => {
+                console.error("Error creating article:", error);
+            });
+    }
+
+    
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setSubmitting(true);
+
+        try {
+            const data = new FormData();
+            Object.entries(formData).forEach(([key, value]) => {
+                data.append(key, value);
+            });
+
+            const response = await api.post('/items', data);
+            const newAuctionId = response.data.id;
+            setFormData(prevData => ({ ...prevData, auction: newAuctionId }));
+            setSuccessMessage('Item created successfully!');
+            setError(null);
+            console.log(response.data);
+        } catch (error) {
+            console.error('Error creating item:', error.response ? error.response.data : error.message);
+            setError('Failed to create item. Please try again.');
+            setSuccessMessage('');
+        } finally {
+            setSubmitting(false);
+            clearForm();
+        }
+    };
+
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setSubmitting(true);
+    
+        try {
+            const { name, description, price, bidstep, category, image, auction } = formData;
+    
+            const response = await api.post('/items', { name, description, price, bidstep, category, image, auction });
+            
+            const newAuctionId = response.data.id;
+            setFormData(prevData => ({ ...prevData, auction: newAuctionId }));
+            setSuccessMessage('Item created successfully!');
+            setError(null);
+            console.log(response.data);
+        } catch (error) {
+            console.error('Error creating item:', error.response ? error.response.data : error.message);
+            setError('Failed to create item. Please try again.');
+            setSuccessMessage('');
+        } finally {
+            setSubmitting(false);
+            clearForm();
+        }
+    };
+
+    import React, { useState } from "react";
+import api from "../services/api";
+import "./create.css";
+import { Link } from "react-router-dom";
+
+function Create() {
+    const [title, setTitle] = useState("");
+    const [goal, setGoal] = useState("");
+    const [startdate, setStartdate] = useState("");
+    const [enddate, setEnddate] = useState("");
+    const [starttime, setStarttime] = useState("");
+    const [endtime, setEndtime] = useState("");
+    const [description, setDescription] = useState("");
+    const [image, setImage] = useState("");
+    const [error, setError] = useState(null);
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        api
+            .post("/auctions", {
+                title,
+                goal,
+                startdate,
+                enddate,
+                starttime,
+                endtime,
+                description,
+            })
+            .then((response) => {
+                console.log(response.data);
+            })
+            .catch((error) => {
+                console.error("Error creating auction:", error);
+                setError("Failed to create auction. Please try again.");
+            });
+    }
+
+                            <li className="nav-item">
+                            <Link className="nav-link active" aria-current="page" to="/item">Item</Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link className="nav-link active" aria-current="page" to="/show">Show</Link>
+                        </li>
+                        <li className="nav-item dropdown">
+                            <Link className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Dropdown
+                            </Link>
+                            <ul className="dropdown-menu">
+                                <li><Link className="dropdown-item" href="#">Action</Link></li>
+                                <li><Link className="dropdown-item" href="#">Another action</Link></li>
+                                <li><hr className="dropdown-divider"/></li>
+                                <li><Link className="dropdown-item" href="#">Something else here</Link></li>
+                            </ul>
+                        </li>
+                        <li className="nav-item">
+                            <Link className="nav-link disabled" aria-disabled="true">Disabled</Link>
+                        </li>
+
+                        import React, { useState } from "react";
+import api from "../services/api";
+import "./about.css";
+import { Link } from "react-router-dom";
+
+import ArticleList from '../components/ArticleList';
+import ArticleForm from '../components/ArticleForm';
+import ArticleUpdate from '../components/ArticleUpdate';
+import ArticleDelete from '../components/ArticleDelete';
+
+function About(){
+    return (
+
+<div>
+<ArticleList />
+<ArticleForm />
+<ArticleUpdate article={{ id: 1, title: 'Example', content: 'Example Content' }} />
+<ArticleDelete articleId={1} />
+</div>
+
+    );
+}
+
+export default About;
