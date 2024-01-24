@@ -546,3 +546,379 @@ function About(){
 }
 
 export default About;
+
+
+
+
+
+
+
+import "./detail.css";
+import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import api from '../services/api';
+
+function Detail({ auctionId }) {
+    const [details, setDetail] = useState([]);
+
+    useEffect(() => {
+        api.get(`/auctions/${auctionId}`)
+            .then((response) => {
+                setDetail(response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching auction details:", error);
+            });
+    }, [auctionId]);
+    
+
+    return (
+        <div>
+            <h2>Auctions</h2>
+            <ul>
+                {Array.isArray(details) && details.map((detail) => (
+                    <li key={detail.id}>
+                        {detail.title} - {detail.goal}
+                        {detail.startdate} - {detail.starttime}
+                        {detail.enddate} - {detail.endtime}
+                        {detail.description} - {detail.image}
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+    
+}
+
+export default Detail;
+
+
+import "./item.css";
+import React, { useState, useEffect } from 'react';
+import api from '../services/api';
+import { useNavigate } from "react-router-dom";
+
+function Item({ auctionId }) {
+    const next = useNavigate();
+    const [formData, setFormData] = useState({
+        name: '',
+        description: '',
+        price: '',
+        bidstep: '',
+        category: '',
+        image: null,
+        auctionId: '',
+    });
+
+    const [submitting, setSubmitting] = useState(false);
+    const [error, setError] = useState(null);
+    const [successMessage, setSuccessMessage] = useState('');
+
+    useEffect(() => {
+        const fetchAuctionId = async () => {
+            try {
+                if (auctionId) {
+                    const response = await api.get(`/auctions/${auctionId}`);
+                    setFormData(prevData => ({ ...prevData, auctionId: response.data.id }));
+                }
+            } catch (error) {
+                console.error('Error fetching auctionId:', error);
+            }
+        };
+        
+    
+        fetchAuctionId();
+    }, [auctionId]);
+    
+
+    const clearForm = () => {
+        setFormData({
+            name: '',
+            description: '',
+            price: '',
+            bidstep: '',
+            category: '',
+            image: null,
+            auctionId: '',
+        });
+    };
+
+    const handleFileChange = (e) => {
+        setFormData({
+            ...formData,
+            image: e.target.files[0],
+        });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setSubmitting(true);
+    
+        try {
+            const { name, description, price, bidstep, category, image, auctionId } = formData;
+    
+            const formDataInstance = new FormData();
+            formDataInstance.append('name', name);
+            formDataInstance.append('description', description);
+            formDataInstance.append('price', price);
+            formDataInstance.append('bidstep', bidstep);
+            formDataInstance.append('category', category);
+            formDataInstance.append('image', image);
+            formDataInstance.append('auctionId', auctionId);
+    
+            console.log("Form Data:", formData);
+    
+            const response = await api.post('/items', formDataInstance, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+    
+            console.log("Response:", response);
+    
+            const newAuctionId = response.data.id;
+            setFormData(prevData => ({ ...prevData, auctionId: newAuctionId }));
+            setSuccessMessage('Item created successfully!');
+            setError(null);
+            console.log(response.data);
+        } catch (error) {
+            console.error("Error:", error); // Log the complete error for debugging
+    
+            if (error.response) {
+                console.error("Server responded with error status:", error.response.status);
+                console.error("Validation errors:", error.response.data.errors);
+                setError(error.response.data.errors);
+            } else if (error.request) {
+                console.error("No response received from the server");
+            } else {
+                console.error("Error setting up the request:", error.message);
+            }
+        } finally {
+            setSubmitting(false);
+            clearForm();
+        };
+    };
+    
+
+    return (
+        <div>
+            <h2>Add Item</h2>
+            <form id="itemForm" onSubmit={handleSubmit}>
+                <label>Name:</label>
+                <input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                />
+                <br />
+
+                <label>Description:</label>
+                <input
+                    type="text"
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                />
+                <br />
+
+                <label>Price:</label>
+                <input
+                    type="number" placeholder='$'
+                    value={formData.price}
+                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                />
+                <br />
+
+                <label>Bid Increment:</label>
+                <input
+                    type="number" placeholder='$'
+                    value={formData.bidstep}
+                    onChange={(e) => setFormData({ ...formData, bidstep: e.target.value })}
+                />
+                <br />
+
+                <label>Category:</label>
+                <input
+                    type="text"
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                />
+                <br />
+
+                <label>Image:</label>
+                <input type="file" onChange={handleFileChange} />
+                <br />
+
+                <button type="submit" disabled={submitting}>
+                    Submit
+                </button>
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+                {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+            </form>
+        </div>
+    );
+}
+
+export default Item;
+
+import React, { useState, useEffect } from "react";
+import api from "../services/api";
+import "./create.css";
+import Item from './item';
+import Detail from './detail';
+import { useNavigate } from "react-router-dom";
+
+
+function Create() {
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        title: "",
+        goal: "",
+        startdate: "",
+        enddate: "",
+        starttime: "",
+        endtime: "",
+        description: "",
+        image: "",
+        error: null,
+        auctionId: null,
+    });
+
+    const { title, goal, startdate, enddate, starttime, endtime, description, image, error, auctionId } = formData;
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        api.post("/auctions", {
+            title,
+            goal,
+            startdate,
+            enddate,
+            starttime,
+            endtime,
+            description,
+            image,
+            auctionId
+        })
+        .then((response) => {
+            setFormData(prevData => ({ ...prevData, auctionId: response.data.id }));
+            console.log(response.data);
+            navigate('/item');
+        })
+        .catch((error) => {
+            console.error("Error creating auction:", error);
+            setFormData(prevData => ({ ...prevData, error: "Failed to create auction. Please try again." }));
+            
+        });
+        
+    }
+    
+
+    useEffect(() => {
+        const fetchAuctionId = async () => {
+            try {
+                if (auctionId) {
+                    const response = await api.get(`/auctions/${auctionId}`);
+                    setFormData(prevData => ({ ...prevData, auctionId: response.data.id }));
+                }
+            } catch (error) {
+                console.error('Error fetching auctionId:', error);
+            }
+        };
+        
+    
+        fetchAuctionId();
+    }, [auctionId]);
+    
+
+    const handleFileChange = (e) => {
+        setFormData({
+            ...formData,
+            image: e.target.files[0],
+        });
+    };
+
+    return (
+        <div>
+            <h2>Add Auction</h2>
+            {error && <p style={{ color: "red" }}>{error}</p>}
+            <form onSubmit={handleSubmit}>
+            <label>Title:</label>
+                <input
+                    type="text"
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                />
+                <br />
+
+                <br/>
+                <div>
+                    <label>Goal:</label>
+                    <input
+                        type="number" placeholder="$"
+                        value={formData.goal}
+                        onChange={(e) => setFormData({ ...formData, goal: e.target.value })}
+                    />
+                </div>
+                <br />
+                <div>
+                    <label>Start Date:</label>
+                    <input
+                        type="date"
+                        value={formData.startdate}
+                        onChange={(e) => setFormData({ ...formData, startdate: e.target.value })}
+                    />
+                </div>
+                <br />
+                <div>
+                    <label>End Date:</label>
+                    <input
+                        type="date"
+                        value={formData.enddate}
+                        onChange={(e) => setFormData({ ...formData, enddate: e.target.value })}
+                    />
+                </div>
+                <br />
+                <div>
+                    <label>Start Time:</label>
+                    <input
+                        type="time"
+                        value={formData.starttime}
+                        onChange={(e) => setFormData({ ...formData, starttime: e.target.value })}
+                    />
+                </div>
+                <br />
+                <div>
+                    <label>End Time:</label>
+                    <input
+                        type="time"
+                        value={formData.endtime}
+                        onChange={(e) => setFormData({ ...formData, endtime: e.target.value })}
+                    />
+                </div>
+                <br />
+                <div>
+                    <label>Description:</label>
+                    <input
+                        type="text"
+                        value={formData.description}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    />
+                </div>
+                <br />
+
+                <label>Image:</label>
+                <input type="file" onChange={handleFileChange} />
+                <br />
+
+                <button type="submit">Submit</button>
+            </form>
+
+            {/* Pass Auction ID as prop to Item component */}
+            {auctionId && <Item auctionId={auctionId} />}
+
+            {/* Pass Auction ID as prop to Detail component */}
+            {auctionId && <Detail auctionId={auctionId} />}
+        </div>
+    );
+}
+
+export default Create;

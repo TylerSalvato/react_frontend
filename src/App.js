@@ -8,17 +8,19 @@ import About from './pages/about';
 import Admin from './pages/admin';
 import Display from './pages/display';
 import Item from './pages/item';
-import Show from './pages/show';
+import Detail from './pages/detail';
+import Product from './pages/product';
+import BiddingCart from './pages/BiddingCart';
 import Navbar from './components/navbar';
 import Footer from './components/footer';
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 
 function App() {
   return (
-    <BrowserRouter>
+    <Router>
     <div className="App">
 
       <Navbar/>
@@ -27,17 +29,20 @@ function App() {
         <Route path='/' element={<Home/>}></Route>
         <Route path='/create' element={<Create/>}></Route>
         <Route path='/display' element={<Display/>}></Route>
-        <Route path='/item' element={<Item/>}></Route>
-        <Route path='/show' element={<Show/>}></Route>
+        <Route path='/item/:auctionId' element={<Item/>}></Route>
         <Route path='/about' element={<About/>}></Route>
         <Route path='/admin' element={<Admin/>}></Route>
+        <Route path='/biddingcart' element={<BiddingCart/>}></Route>
+        <Route path="/details/:auctionId" element={<Detail/>}></Route>
+        <Route path="/items/:itemId" element={<Product/>}></Route>
+        
       </Routes>
 
       <Footer/>
 
 
     </div>
-    </BrowserRouter>
+    </Router>
   );
 }
 

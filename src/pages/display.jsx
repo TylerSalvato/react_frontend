@@ -1,30 +1,40 @@
-
-import "./display.css";
-import { Link } from "react-router-dom";
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../services/api';
 
 function Display() {
-    const [displays, setDisplay] = useState([]);
+    const [auctions, setAuctions] = useState([]);
 
     useEffect(() => {
-        api.get('/auctions').then((response) => {
-            setDisplay(response.data);
-        });
+        // Fetch all auctions
+        api.get('/auctions')
+            .then(response => {
+                setAuctions(response.data || []);
+            })
+            .catch(error => {
+                console.error('Error fetching auctions:', error);
+            });
     }, []);
 
     return (
         <div>
-            <h2>Auctions</h2>
+            <h2>All Auctions</h2>
             <ul>
-                {displays.map((display) => (
-                    <li key={display.id}>
-                        {display.title} - {display.goal}
+                {auctions.map(auction => (
+                    <li key={auction.id}>
+                        <p>Title: {auction.title}</p>
+                        <p>Start Date: {auction.startdate}</p>
+                        <p>End Date: {auction.enddate}</p>
+                        <Link to={`/details/${auction.id}`}>
+                            <button>View Details</button>
+                        </Link>
+                        
                     </li>
                 ))}
             </ul>
         </div>
     );
-};
+}
 
 export default Display;
+
