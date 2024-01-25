@@ -1,14 +1,14 @@
-// AddToCart.jsx
+
 
 import React, { useState } from 'react';
 
 function AddToCart ({ item, onAddToCart }) {
     const cartId = '';
-    // Update handleAddToCart in AddToCart.jsx
+    
 
     const handleAddToCart = async () => {
         try {
-            // Make a POST request to add the item to the cart
+            
             const response = await fetch(`/carts/${cartId}/add_item/${item.id}`, {
                 method: 'POST',
                 headers: {
@@ -17,8 +17,8 @@ function AddToCart ({ item, onAddToCart }) {
             });
 
             if (response.ok) {
-                // Update the local state or trigger a fetch to update the cart data
-                // ...
+                
+                
             } else {
                 console.error('Failed to add item to cart');
             }

@@ -30,8 +30,8 @@ function Create() {
                 console.log(response.data);
                 const createdAuctionId = response.data.id;
                 setFormData(prevData => ({ ...prevData, auction_id: createdAuctionId }));
-                // Redirect to item creation page with the auction ID
-                navigate(`/item/${createdAuctionId}`);  // Add a forward slash (/) before 'item'
+                
+                navigate(`/item/${createdAuctionId}`); 
             })
             .catch((error) => {
                 console.error("Error creating auction:", error);
@@ -141,11 +141,11 @@ function Create() {
                 <button type="submit">Submit</button>
             </form>
 
-            {/* Pass Auction ID as prop to Item component */}
+            
             {auction_id && <Item auction_id={auction_id} />}
 
             {/* Pass Auction ID as prop to Detail component */}
-            {auction_id && <Detail auction_id={auction_id} />}
+            
         </div>
     );
 }

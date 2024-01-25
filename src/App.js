@@ -1,6 +1,7 @@
 
 import React from 'react';
 
+
 import './App.css';
 import Home from './pages/home';
 import Create from './pages/create';
@@ -10,6 +11,7 @@ import Display from './pages/display';
 import Item from './pages/item';
 import Detail from './pages/detail';
 import Product from './pages/product';
+import Register from './pages/register';
 import BiddingCart from './pages/BiddingCart';
 import Navbar from './components/navbar';
 import Footer from './components/footer';
@@ -32,6 +34,7 @@ function App() {
         <Route path='/item/:auctionId' element={<Item/>}></Route>
         <Route path='/about' element={<About/>}></Route>
         <Route path='/admin' element={<Admin/>}></Route>
+        <Route path='/register' element={<Register/>}></Route>
         <Route path='/biddingcart' element={<BiddingCart/>}></Route>
         <Route path="/details/:auctionId" element={<Detail/>}></Route>
         <Route path="/items/:itemId" element={<Product/>}></Route>

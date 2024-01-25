@@ -69,11 +69,13 @@ function Detail() {
     };
     
     
+    
+    
 
     return (
         <div>
             <h2>Auction Details</h2>
-            {/* Display auction details */}
+            
             <p>Title: {auctionDetails.title}</p>
             <p>Image: {auctionDetails.image}</p>
             <p>Goal: {auctionDetails.goal}</p>
@@ -84,19 +86,20 @@ function Detail() {
             <p>Description: {auctionDetails.description}</p>
 
             <h3>Items</h3>
-            {/* Display only items connected to the specific auction ID */}
+            
             <ul>
-                {items.map(item => (
-                    <li key={item.id}>
-                        {item.name} - {item.description} - ${item.price}
-                        <Link to={`/items/${item.id}`}>
-                            <button>View Details</button>
-                        </Link>
-                        {/* Pass item.id to addToCart function when the button is clicked */}
-                        <button onClick={() => addToCart(item.id)}>Add To Cart</button>
-                        
-                    </li>
-                ))}
+            // Inside the loop where you display items
+{items.map(item => (
+    <li key={item.id}>
+        {item.name} - {item.description} - ${item.price}
+        <Link to={`/items/${item.id}`}>
+            <button>View Details</button>
+        </Link>
+        
+        <button onClick={() => addToCart(item.id)}>Add To Cart</button>
+    </li>
+))}
+
             </ul>
         </div>
     );

@@ -11,7 +11,7 @@ function Product() {
 
     useEffect(() => {
         setLoading(true);
-        // Fetch item details
+        
         api.get(`/items/${itemId}`)
             .then(response => {
                 setItemDetails(response.data || {});
@@ -33,11 +33,11 @@ function Product() {
             ) : (
                 <>
                     <h2>Item Details</h2>
-                    {/* Display item details */}
+                    
                     <p>Name: {itemDetails.name}</p>
                     <p>Description: {itemDetails.description}</p>
                     <p>Price: ${itemDetails.price}</p>
-                    {/* Add more details as needed */}
+                    
                 </>
             )}
         </div>

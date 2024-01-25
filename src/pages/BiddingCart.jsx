@@ -1,4 +1,4 @@
-// ShoppingCart.jsx
+
 
 import React, { useState } from 'react';
 import AddToCart from '../components/AddToCart';
@@ -8,7 +8,7 @@ const BiddingCart = () => {
     const [cartItems, setCartItems] = useState([]);
 
     const handleAddToCart = (item) => {
-        // Add the selected item to the cart
+        
         setCartItems((prevCartItems) => [...prevCartItems, item]);
     };
 

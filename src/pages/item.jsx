@@ -133,7 +133,7 @@ function Item() {
                 {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
             </form>
 
-            {/* Button to redirect to details page */}
+            
             <button onClick={() => navigate(`/details/${auction_id}`)}>
                 View Details
             </button>

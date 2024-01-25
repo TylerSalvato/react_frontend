@@ -6,7 +6,7 @@ function Display() {
     const [auctions, setAuctions] = useState([]);
 
     useEffect(() => {
-        // Fetch all auctions
+        
         api.get('/auctions')
             .then(response => {
                 setAuctions(response.data || []);
