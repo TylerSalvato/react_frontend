@@ -32,7 +32,7 @@ function Admin() {
 
             
 
-            <button onClick={goToRegistration}>Go</button>
+            <button onClick={goToRegistration}>Sign Up</button>
         </div>
     );
 }

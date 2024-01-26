@@ -1,5 +1,7 @@
 
 import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 
 import './App.css';
@@ -13,19 +15,21 @@ import Detail from './pages/detail';
 import Product from './pages/product';
 import Register from './pages/register';
 import BiddingCart from './pages/BiddingCart';
+import GradientBackground from './components/GradientBackground';
 import Navbar from './components/navbar';
 import Footer from './components/footer';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 
 function App() {
   return (
+    
     <Router>
     <div className="App">
 
       <Navbar/>
+
+      <GradientBackground>
 
       <Routes>
         <Route path='/' element={<Home/>}></Route>
@@ -41,11 +45,14 @@ function App() {
         
       </Routes>
 
+      </GradientBackground>
+
       <Footer/>
 
 
     </div>
     </Router>
+    
   );
 }
 

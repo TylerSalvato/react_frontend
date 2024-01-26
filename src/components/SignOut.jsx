@@ -3,7 +3,7 @@
 function SignOut({ onSignOut }) {
     const handleSignOut = async () => {
 
-        const response = await fetch('/api/auth/sign_out', {
+        const response = await fetch('/auth/sign_out', {
             method: 'DELETE',
         });
 

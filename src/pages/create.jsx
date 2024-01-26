@@ -144,7 +144,7 @@ function Create() {
             
             {auction_id && <Item auction_id={auction_id} />}
 
-            {/* Pass Auction ID as prop to Detail component */}
+            
             
         </div>
     );
