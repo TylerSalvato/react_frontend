@@ -17,21 +17,28 @@ function Display() {
     }, []);
 
     return (
-        <div>
-            <h2>All Auctions</h2>
-            <ul>
+        
+        <div className='overflow-auto container mt-4'>
+            <h2 className='mb-4'>All Auctions</h2>
+            <div className='row'>
                 {auctions.map(auction => (
-                    <li key={auction.id}>
-                        <p>Title: {auction.title}</p>
-                        <p>Start Date: {auction.startdate}</p>
-                        <p>End Date: {auction.enddate}</p>
-                        <Link to={`/details/${auction.id}`}>
-                            <button>View Details</button>
-                        </Link>
-                        
-                    </li>
+                    <div key={auction.id} className='col-md-4 mb-3'>
+                        <div className='card'>
+                            <div className='card-body'>
+                                <h5 className='card-title'>Title: {auction.title}</h5>
+                                <p className='card-subtitle mb-2 text-body-secondary'>
+                                    Start Date: {auction.startdate}
+                                </p>
+                                <p className='card-text'>End Date: {auction.enddate}</p>
+                                <Link to={`/details/${auction.id}`} className='btn btn-primary'>
+                                    View Details
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
                 ))}
-            </ul>
+            </div>
+            <h2 className='mb-4'>All Auctions</h2>
         </div>
     );
 }

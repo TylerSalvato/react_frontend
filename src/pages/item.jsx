@@ -79,62 +79,85 @@ function Item() {
     };
 
     return (
-        <div>
+        <div className='container mt-4'>
             <h2>Add Item</h2>
             <form id="itemForm" onSubmit={handleSubmit}>
-                <label>Name:</label>
-                <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                />
-                <br />
+                <div className='mb-3'>
+                    <label htmlFor="name" className='form-label'>Name:</label>
+                    <input
+                        type="text"
+                        className='form-control'
+                        id="name"
+                        value={name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    />
+                </div>
 
-                <label>Description:</label>
-                <input
-                    type="text"
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                />
-                <br />
+                <div className='mb-3'>
+                    <label htmlFor="description" className='form-label'>Description:</label>
+                    <input
+                        type="text"
+                        className='form-control'
+                        id="description"
+                        value={description}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    />
+                </div>
 
-                <label>Price:</label>
-                <input
-                    type="number" placeholder='$'
-                    value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                />
-                <br />
+                <div className='mb-3'>
+                    <label htmlFor="price" className='form-label'>Price:</label>
+                    <input
+                        type="number"
+                        className='form-control'
+                        id="price"
+                        placeholder='$'
+                        value={price}
+                        onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                    />
+                </div>
 
-                <label>Bid Increment:</label>
-                <input
-                    type="number" placeholder='$'
-                    value={formData.bidstep}
-                    onChange={(e) => setFormData({ ...formData, bidstep: e.target.value })}
-                />
-                <br />
+                <div className='mb-3'>
+                    <label htmlFor="bidstep" className='form-label'>Bid Increment:</label>
+                    <input
+                        type="number"
+                        className='form-control'
+                        id="bidstep"
+                        placeholder='$'
+                        value={bidstep}
+                        onChange={(e) => setFormData({ ...formData, bidstep: e.target.value })}
+                    />
+                </div>
 
-                <label>Category:</label>
-                <input
-                    type="text"
-                    value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                />
-                <br />
+                <div className='mb-3'>
+                    <label htmlFor="category" className='form-label'>Category:</label>
+                    <input
+                        type="text"
+                        className='form-control'
+                        id="category"
+                        value={category}
+                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    />
+                </div>
 
-                <label>Image:</label>
-                <input type="file" onChange={handleFileChange} />
-                <br />
+                <div className='mb-3'>
+                    <label htmlFor="image" className='form-label'>Image:</label>
+                    <input
+                        type="file"
+                        className='form-control'
+                        id="image"
+                        onChange={handleFileChange}
+                    />
+                </div>
 
-                <button type="submit" disabled={submitting}>
+                <button type="submit" className='btn btn-primary' disabled={submitting}>
                     Submit
                 </button>
+
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
             </form>
 
-            
-            <button onClick={() => navigate(`/details/${auction_id}`)}>
+            <button className='btn btn-secondary' onClick={() => navigate(`/details/${auction_id}`)}>
                 View Details
             </button>
         </div>

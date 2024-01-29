@@ -12,17 +12,21 @@ function Show() {
     }, []);
 
     return (
-        <div>
-            <h2>Items</h2>
-            <ul>
+        <div className='container mt-4'>
+            <h2>Item Details</h2>
+            <div className='card-group'>
                 {shows.map((show) => (
-                    <li key={show.id}>
-                        {show.name} - {show.description}
-                    </li>
+                    <div key={show.id} className='card'>
+                        <div className='card-body'>
+                            <h3 className='card-title'>{show.name}</h3>
+                            <p className='card-text'>Description: {show.description}</p>
+                            {/* Add other details you want to display */}
+                        </div>
+                    </div>
                 ))}
-            </ul>
+            </div>
         </div>
     );
-};
+}
 
 export default Show;

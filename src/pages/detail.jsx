@@ -73,34 +73,43 @@ function Detail() {
     
 
     return (
-        <div>
+        <div className='container mt-4'>
             <h2>Auction Details</h2>
-            
-            <p>Title: {auctionDetails.title}</p>
-            <p>Image: {auctionDetails.image}</p>
-            <p>Goal: {auctionDetails.goal}</p>
-            <p>Start Date: {auctionDetails.startdate}</p>
-            <p>End Date: {auctionDetails.enddate}</p>
-            <p>Start Time: {auctionDetails.starttime}</p>
-            <p>End Time: {auctionDetails.endtime}</p>
-            <p>Description: {auctionDetails.description}</p>
+
+            <div className='card'>
+                <div className='card-body'>
+                    <p className='card-title'>Title: {auctionDetails.title}</p>
+                    <p className='card-text'>Image: {auctionDetails.image}</p>
+                    <p className='card-text'>Goal: {auctionDetails.goal}</p>
+                    <p className='card-text'>Start Date: {auctionDetails.startdate}</p>
+                    <p className='card-text'>End Date: {auctionDetails.enddate}</p>
+                    <p className='card-text'>Start Time: {auctionDetails.starttime}</p>
+                    <p className='card-text'>End Time: {auctionDetails.endtime}</p>
+                    <p className='card-text'>Description: {auctionDetails.description}</p>
+                </div>
+            </div>
 
             <h3>Items</h3>
-            
-            <ul>
-            // Inside the loop where you display items
-{items.map(item => (
-    <li key={item.id}>
-        {item.name} - {item.description} - ${item.price}
-        <Link to={`/items/${item.id}`}>
-            <button>View Details</button>
-        </Link>
-        
-        <button onClick={() => addToCart(item.id)}>Add To Cart</button>
-    </li>
-))}
 
-            </ul>
+            <div className='row'>
+                {items.map(item => (
+                    <div key={item.id} className='col-md-4 mb-4'>
+                        <div className='card'>
+                            <div className='card-body'>
+                                <h5 className='card-title'>{item.name}</h5>
+                                <p className='card-text'>{item.description}</p>
+                                <p className='card-text'>Price: ${item.price}</p>
+                                <Link to={`/items/${item.id}`}>
+                                    <button className='btn btn-primary'>View Details</button>
+                                </Link>
+                                <button className='btn btn-success' onClick={() => addToCart(item.id)}>
+                                    Add To Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }

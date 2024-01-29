@@ -25,7 +25,7 @@ function Product() {
     }, [itemId]);
 
     return (
-        <div>
+        <div className="container mt-4">
             {loading ? (
                 <p>Loading...</p>
             ) : error ? (
@@ -33,11 +33,15 @@ function Product() {
             ) : (
                 <>
                     <h2>Item Details</h2>
-                    
-                    <p>Name: {itemDetails.name}</p>
-                    <p>Description: {itemDetails.description}</p>
-                    <p>Price: ${itemDetails.price}</p>
-                    
+                    <div className='card'>
+                        <div className='card-body'>
+                            <h3 className='card-title'>{itemDetails.name}</h3>
+                            <p className='card-text'>Description: {itemDetails.description}</p>
+                            <p className='card-text'>Price: ${itemDetails.price}</p>
+                            {/* Add other details you want to display */}
+
+                        </div>
+                    </div>
                 </>
             )}
         </div>

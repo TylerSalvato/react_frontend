@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import api from '../services/api';
+import getCSRFToken from '../components/cookies';
 
 
 function SignIn({ onSignIn }) {
@@ -10,10 +12,11 @@ function SignIn({ onSignIn }) {
     const handleSignIn = async () => {
         setLoading(true);
         try {
-            const response = await fetch('/auth/sign_in', {
+            const response = await api.post('/auth/sign_in', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    //"X-CSRF-Token": getCSRFToken(document.cookie)
                 },
                 body: JSON.stringify({ email, password }),
             });
