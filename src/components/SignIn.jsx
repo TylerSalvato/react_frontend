@@ -12,14 +12,18 @@ function SignIn({ onSignIn }) {
     const handleSignIn = async () => {
         setLoading(true);
         try {
-            const response = await api.post('/auth/sign_in', {
-                method: 'POST',
-                headers: {
+            const response = await api.post(
+                '/auth/sign_in',
+                { email, password },
+                {
+                  headers: {
                     'Content-Type': 'application/json',
-                    //"X-CSRF-Token": getCSRFToken(document.cookie)
-                },
-                body: JSON.stringify({ email, password }),
-            });
+                    'X-CSRF-Token': getCSRFToken(document.cookie)
+                  },
+                }
+                
+              );
+              
     
             if (!response.ok) {
                 if (response.headers.get('Content-Type')?.includes('application/json')) {

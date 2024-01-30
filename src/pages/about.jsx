@@ -1,8 +1,6 @@
-
-
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import './about.css'; 
+import { Link, useNavigate } from 'react-router-dom';
+import './about.css';
 
 function About() {
   const navigate = useNavigate();
@@ -22,6 +20,11 @@ function About() {
       <button className="btn-primary" onClick={save}>
         Go
       </button>
+      <div>
+        <Link to='/login'>Log In</Link>
+        <br />
+        <Link to='/signup'>Sign Up</Link>
+      </div>
     </div>
   );
 }
