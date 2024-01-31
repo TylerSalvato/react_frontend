@@ -34,6 +34,7 @@ function Item() {
 
         fetchAuctionId();
     }, [auctionId]);
+    
 
     const clearForm = () => {
         setFormData(prevData => ({

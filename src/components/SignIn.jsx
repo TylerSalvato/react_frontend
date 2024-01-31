@@ -1,6 +1,8 @@
+
+
 import { useState } from 'react';
 import api from '../services/api';
-import getCSRFToken from '../components/cookies';
+
 
 
 function SignIn({ onSignIn }) {
@@ -18,7 +20,7 @@ function SignIn({ onSignIn }) {
                 {
                   headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-Token': getCSRFToken(document.cookie)
+                    
                   },
                 }
                 

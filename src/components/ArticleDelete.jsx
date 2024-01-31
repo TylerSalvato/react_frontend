@@ -1,4 +1,4 @@
-
+/*
 import React from 'react';
 import api from '../services/api';
 
@@ -19,3 +19,4 @@ function ArticleDelete ({ articleId }) {
 
 export default ArticleDelete;
 
+*/

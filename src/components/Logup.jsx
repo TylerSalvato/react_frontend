@@ -1,3 +1,5 @@
+/*
+
 //client/src/Signup.js
 import React, { Component } from 'react';
 import axios from 'axios'
@@ -101,3 +103,5 @@ return (
   }
 }
 export default Signup;
+
+*/

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import api from "../services/api";
 
@@ -9,7 +10,7 @@ function SignUp() {
         e.preventDefault();
     
         try {
-            const response = await api.post('/users', {
+            const response = await api.post('/auth', {
                 user: { email, password }
             });
     

@@ -1,0 +1,13 @@
+      <Route path='/about' element={<About/>}></Route>
+      <Route path='/admin' element={<Admin/>}></Route>
+      <Route path='/register' element={<Register/>}></Route>
+
+                  <div className='mb-3'>
+                <label htmlFor="image" className='form-label'>Image:</label>
+                <input
+                    type="file"
+                    className='form-control'
+                    id="image"
+                    onChange={handleFileChange}
+                />
+            </div>

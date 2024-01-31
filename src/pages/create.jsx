@@ -1,169 +1,202 @@
 import React, { useState, useEffect } from "react";
 import api from "../services/api";
 import "./create.css";
-import Item from './item';
-import Detail from './detail';
+import Item from "./item";
 import { useNavigate } from "react-router-dom";
 
-
 function Create() {
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        title: "",
-        goal: "",
-        startdate: "",
-        enddate: "",
-        starttime: "",
-        endtime: "",
-        description: "",
-        image: "",
-        error: null,
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    title: "",
+    goal: "",
+    startdate: "",
+    enddate: "",
+    starttime: "",
+    endtime: "",
+    description: "",
+    error: null,
+    auction_id: 1
+  });
+
+  const {
+    title,
+    goal,
+    startdate,
+    enddate,
+    starttime,
+    endtime,
+    description,
+    image,
+    error,
+    auction_id,
+  } = formData;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Inside your handleSubmit function
+    api
+      .post("/auctions", formData)
+      .then((response) => {
+        console.log(response.data);
+        const createdAuctionId = response.data.id;
+        setFormData((prevData) => ({
+          ...prevData,
+          auction_id: createdAuctionId,
+        }));
+
+        navigate(`/item/${createdAuctionId}`);
+      })
+      .catch((error) => {
+        console.error("Error creating auction:", error);
+        setFormData((prevData) => ({
+          ...prevData,
+          error: "Failed to create auction. Please try again.",
+        }));
+      });
+  };
+
+  useEffect(() => {
+    const fetchauction_id = async () => {
+      try {
+        if (auction_id) {
+          const response = await api.get(`/auctions/${auction_id}`);
+          setFormData((prevData) => ({
+            ...prevData,
+            auction_id: response.data.id,
+          }));
+        }
+      } catch (error) {
+        console.error("Error fetching auction_id:", error);
+      }
+    };
+
+    fetchauction_id();
+  }, [auction_id]);
+
+  const handleFileChange = (e) => {
+    setFormData({
+      ...formData,
+      image: e.target.files[0],
     });
+  };
 
-
-    const { title, goal, startdate, enddate, starttime, endtime, description, image, error, auction_id } = formData;
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        api.post("/auctions", formData)
-            .then((response) => {
-                console.log(response.data);
-                const createdAuctionId = response.data.id;
-                setFormData(prevData => ({ ...prevData, auction_id: createdAuctionId }));
-                
-                navigate(`/item/${createdAuctionId}`); 
-            })
-            .catch((error) => {
-                console.error("Error creating auction:", error);
-                setFormData(prevData => ({ ...prevData, error: "Failed to create auction. Please try again." }));
-            });
-    };
-    
-    
-
-    useEffect(() => {
-        const fetchauction_id = async () => {
-            try {
-                if (auction_id) {
-                    const response = await api.get(`/auctions/${auction_id}`);
-                    setFormData(prevData => ({ ...prevData, auction_id: response.data.id }));
-                }
-            } catch (error) {
-                console.error('Error fetching auction_id:', error);
+  return (
+    <div className="container mt-4">
+      <h2>Add Auction</h2>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      <form onSubmit={handleSubmit}>
+        <div className="mb-3">
+          <label htmlFor="title" className="form-label">
+            Title:
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="title"
+            value={title}
+            onChange={(e) =>
+              setFormData({ ...formData, title: e.target.value })
             }
-        };
-        
-    
-        fetchauction_id();
-    }, [auction_id]);
-    
+          />
+        </div>
 
-    const handleFileChange = (e) => {
-        setFormData({
-            ...formData,
-            image: e.target.files[0],
-        });
-    };
+        <div className="mb-3">
+          <label htmlFor="goal" className="form-label">
+            Goal:
+          </label>
+          <input
+            type="number"
+            className="form-control"
+            id="goal"
+            placeholder="$"
+            value={goal}
+            onChange={(e) => setFormData({ ...formData, goal: e.target.value })}
+          />
+        </div>
 
-    return (
-        <div className='container mt-4'>
-        <h2>Add Auction</h2>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <form onSubmit={handleSubmit}>
-            <div className='mb-3'>
-                <label htmlFor="title" className='form-label'>Title:</label>
-                <input
-                    type="text"
-                    className='form-control'
-                    id="title"
-                    value={title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                />
-            </div>
+        <div className="mb-3">
+          <label htmlFor="startdate" className="form-label">
+            Start Date:
+          </label>
+          <input
+            type="date"
+            className="form-control"
+            id="startdate"
+            value={startdate}
+            onChange={(e) =>
+              setFormData({ ...formData, startdate: e.target.value })
+            }
+          />
+        </div>
 
-            <div className='mb-3'>
-                <label htmlFor="goal" className='form-label'>Goal:</label>
-                <input
-                    type="number"
-                    className='form-control'
-                    id="goal"
-                    placeholder="$"
-                    value={goal}
-                    onChange={(e) => setFormData({ ...formData, goal: e.target.value })}
-                />
-            </div>
+        <div className="mb-3">
+          <label htmlFor="enddate" className="form-label">
+            End Date:
+          </label>
+          <input
+            type="date"
+            className="form-control"
+            id="enddate"
+            value={enddate}
+            onChange={(e) =>
+              setFormData({ ...formData, enddate: e.target.value })
+            }
+          />
+        </div>
 
-            <div className='mb-3'>
-                <label htmlFor="startdate" className='form-label'>Start Date:</label>
-                <input
-                    type="date"
-                    className='form-control'
-                    id="startdate"
-                    value={startdate}
-                    onChange={(e) => setFormData({ ...formData, startdate: e.target.value })}
-                />
-            </div>
+        <div className="mb-3">
+          <label htmlFor="starttime" className="form-label">
+            Start Time:
+          </label>
+          <input
+            type="time"
+            className="form-control"
+            id="starttime"
+            value={starttime}
+            onChange={(e) =>
+              setFormData({ ...formData, starttime: e.target.value })
+            }
+          />
+        </div>
 
-            <div className='mb-3'>
-                <label htmlFor="enddate" className='form-label'>End Date:</label>
-                <input
-                    type="date"
-                    className='form-control'
-                    id="enddate"
-                    value={enddate}
-                    onChange={(e) => setFormData({ ...formData, enddate: e.target.value })}
-                />
-            </div>
+        <div className="mb-3">
+          <label htmlFor="endtime" className="form-label">
+            End Time:
+          </label>
+          <input
+            type="time"
+            className="form-control"
+            id="endtime"
+            value={endtime}
+            onChange={(e) =>
+              setFormData({ ...formData, endtime: e.target.value })
+            }
+          />
+        </div>
 
-            <div className='mb-3'>
-                <label htmlFor="starttime" className='form-label'>Start Time:</label>
-                <input
-                    type="time"
-                    className='form-control'
-                    id="starttime"
-                    value={starttime}
-                    onChange={(e) => setFormData({ ...formData, starttime: e.target.value })}
-                />
-            </div>
+        <div className="mb-3">
+          <label htmlFor="description" className="form-label">
+            Description:
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="description"
+            value={description}
+            onChange={(e) =>
+              setFormData({ ...formData, description: e.target.value })
+            }
+          />
+        </div>
 
-            <div className='mb-3'>
-                <label htmlFor="endtime" className='form-label'>End Time:</label>
-                <input
-                    type="time"
-                    className='form-control'
-                    id="endtime"
-                    value={endtime}
-                    onChange={(e) => setFormData({ ...formData, endtime: e.target.value })}
-                />
-            </div>
+        <button type="submit" className="btn btn-primary">
+          Submit
+        </button>
+      </form>
 
-            <div className='mb-3'>
-                <label htmlFor="description" className='form-label'>Description:</label>
-                <input
-                    type="text"
-                    className='form-control'
-                    id="description"
-                    value={description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                />
-            </div>
-
-            <div className='mb-3'>
-                <label htmlFor="image" className='form-label'>Image:</label>
-                <input
-                    type="file"
-                    className='form-control'
-                    id="image"
-                    onChange={handleFileChange}
-                />
-            </div>
-
-            <button type="submit" className='btn btn-primary'>Submit</button>
-        </form>
-
-        {auction_id && <Item auction_id={auction_id} />}
+      {auction_id && <Item auction_id={auction_id} />}
     </div>
-);
+  );
 }
 
 export default Create;

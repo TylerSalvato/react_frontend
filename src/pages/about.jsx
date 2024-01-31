@@ -1,3 +1,4 @@
+/*
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './about.css';
@@ -30,3 +31,4 @@ function About() {
 }
 
 export default About;
+*/

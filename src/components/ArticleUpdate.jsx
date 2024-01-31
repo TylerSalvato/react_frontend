@@ -1,4 +1,4 @@
-
+/*
 import React, { useState } from 'react';
 import api from '../services/api';
 
@@ -34,3 +34,4 @@ function ArticleUpdate ({ article }) {
 };
 
 export default ArticleUpdate;
+*/

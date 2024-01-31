@@ -1,3 +1,5 @@
+/*
+
 function getCSRFToken(cookies) {
     if (!cookies) {
       console.error('Cookies are undefined or null.');
@@ -15,3 +17,4 @@ function getCSRFToken(cookies) {
     return csrfCookie.split('=')[1];
   }
   
+*/
