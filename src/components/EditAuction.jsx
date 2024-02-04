@@ -1,95 +1,54 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import api from '../services/api';
-import EditAuction from '../components/EditAuction';
-import Item from './item';
-import { useNavigate } from 'react-router-dom';
 
-function Create() {
-  const navigate = useNavigate();
+function EditAuction({ auction, updateAuctionData }) {
+
   const [formData, setFormData] = useState({
-    title: '',
-    goal: '',
-    startdate: '',
-    enddate: '',
-    starttime: '',
-    endtime: '',
-    description: '',
-    error: null,
-    auction_id: null,
+    title: auction?.title || '',
+    goal: auction?.goal || '',
+    startdate: auction?.startdate || '',
+    enddate: auction?.enddate || '',
+    starttime: auction?.starttime || '',
+    endtime: auction?.endtime || '',
+    description: auction?.description || '',
   });
 
-  const [showItemForm, setShowItemForm] = useState(false);
+  const { title, goal, startdate, enddate, starttime, endtime, description } = formData;
 
-  const {
-    title,
-    goal,
-    startdate,
-    enddate,
-    starttime,
-    endtime,
-    description,
-    error,
-    auction_id,
-  } = formData;
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleUpdate = async () => {
     try {
-      const response = await api.post('/auctions', formData);
-      const createdAuctionId = response.data.id;
+      const response = await api.put(`/auctions/${auction.id}`, {
+        title,
+        goal,
+        startdate,
+        enddate,
+        starttime,
+        endtime,
+        description,
+      });
 
-      setFormData((prevData) => ({
+      console.log(response.data);
+
+     
+      updateAuctionData((prevData) => ({
         ...prevData,
-        auction_id: createdAuctionId,
+        title: response.data.title,
+        goal: response.data.goal,
+        startdate: response.data.startdate,
+        enddate: response.data.enddate,
+        starttime: response.data.starttime,
+        endtime: response.data.endtime,
+        description: response.data.description,
       }));
-
-      setShowItemForm(true);
-      navigate(`/item/${createdAuctionId}`);
     } catch (error) {
-      console.error('Error creating auction:', error);
-      setFormData((prevData) => ({
-        ...prevData,
-        error: 'Failed to create auction. Please try again.',
-      }));
+      console.error('Error updating auction:', error);
     }
-  };
-
-  useEffect(() => {
-    const fetchAuctionId = async () => {
-      try {
-        if (auction_id !== null) {
-          const response = await api.get(`/auctions/${auction_id}`);
-          setFormData((prevData) => ({
-            ...prevData,
-            auction_id: response.data.id,
-          }));
-        }
-      } catch (error) {
-        console.error('Error fetching auction_id:', error);
-      }
-    };
-
-    fetchAuctionId();
-  }, [auction_id]);
-
-  const handleFileChange = (e) => {
-    setFormData({
-      ...formData,
-      image: e.target.files[0],
-    });
-  };
-
-  // Callback function to update auction data
-  const updateAuctionData = (newAuctionData) => {
-    setFormData(newAuctionData);
   };
 
   return (
     <div className="container mt-4">
-      <h2>Add Auction</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
+      <h2>Edit Auction</h2>
+      <form>
         <div className="mb-3">
           <label htmlFor="title" className="form-label">
             Title:
@@ -100,7 +59,7 @@ function Create() {
             id="title"
             value={title}
             onChange={(e) =>
-              setFormData({ ...formData, title: e.target.value })
+              setFormData((prevData) => ({ ...prevData, title: e.target.value }))
             }
           />
         </div>
@@ -115,7 +74,9 @@ function Create() {
             id="goal"
             placeholder="$"
             value={goal}
-            onChange={(e) => setFormData({ ...formData, goal: e.target.value })}
+            onChange={(e) =>
+              setFormData((prevData) => ({ ...prevData, goal: e.target.value }))
+            }
           />
         </div>
 
@@ -189,24 +150,18 @@ function Create() {
             id="description"
             value={description}
             onChange={(e) =>
-              setFormData({ ...formData, description: e.target.value })
+              setFormData((prevData) => ({ ...prevData, description: e.target.value }))
             }
           />
         </div>
 
-        <button type="submit" className="btn btn-primary">
-          Submit
+        <br />
+        <button type="button" onClick={handleUpdate}>
+          Update Auction
         </button>
       </form>
-      {showItemForm && auction_id && <Item auction_id={auction_id} />}
-      {auction_id && (
-        <EditAuction
-          auction={formData} // Pass the correct formData
-          updateAuctionData={updateAuctionData}
-        />
-      )}
     </div>
   );
 }
 
-export default Create;
+export default EditAuction;

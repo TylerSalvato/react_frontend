@@ -6,35 +6,6 @@ function Detail() {
     const { auctionId } = useParams();
     const [auctionDetails, setAuctionDetails] = useState({});
     const [items, setItems] = useState([]);
-    const [cartId, setCartId] = useState('');
-
-    useEffect(() => {
-        
-        const fetchCart = async () => {
-            try {
-                
-                const existingCartId = localStorage.getItem('guestCartId');
-
-                if (existingCartId) {
-                    setCartId(existingCartId);
-                } else {
-                    
-                    const response = await api.get('/carts'); 
-                    const fetchedCartId = response.data.id;
-
-                    
-                    localStorage.setItem('guestCartId', fetchedCartId);
-
-                    setCartId(fetchedCartId);
-                }
-            } catch (error) {
-                console.error('Error fetching or creating cart:', error);
-            }
-        };
-
-        fetchCart();
-    }, []);
-    
 
     useEffect(() => {
         
@@ -58,19 +29,6 @@ function Detail() {
 
     }, [auctionId]);
 
-    const addToCart = async (itemId) => {
-        try {
-            const response = await api.post(`/carts/${cartId}/add_item/${itemId}`);
-            const updatedCartId = response.data.cartId; 
-            setCartId(updatedCartId);
-        } catch (error) {
-            console.error('Error adding item to cart:', error);
-        }
-    };
-    
-    
-    
-    
 
     return (
         <div className='container mt-4'>
@@ -102,9 +60,7 @@ function Detail() {
                                 <Link to={`/items/${item.id}`}>
                                     <button className='btn btn-primary'>View Details</button>
                                 </Link>
-                                <button className='btn btn-success' onClick={() => addToCart(item.id)}>
-                                    Add To Cart
-                                </button>
+
                             </div>
                         </div>
                     </div>
