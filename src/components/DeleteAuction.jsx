@@ -1,7 +1,9 @@
 import React from 'react';
 import api from '../services/api';
+import { useParams, Link } from 'react-router-dom';
 
-function DeleteAuction({ auctionId }) {
+function DeleteAuction({  }) {
+  const { auctionId } = useParams();
   const handleDelete = async () => {
     try {
       console.log('Deleting auction with ID:', auctionId);

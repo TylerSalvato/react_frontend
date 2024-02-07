@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import api from '../services/api';
+import { useParams, Link } from 'react-router-dom';
 
 function EditAuction({ auction, updateAuctionData }) {
-
+    const { auctionId } = useParams();
   const [formData, setFormData] = useState({
     title: auction?.title || '',
     goal: auction?.goal || '',
@@ -15,9 +16,22 @@ function EditAuction({ auction, updateAuctionData }) {
 
   const { title, goal, startdate, enddate, starttime, endtime, description } = formData;
 
+  useEffect(() => {
+        
+    api.get(`/auctions/${auctionId}`)
+        .then(response => {
+            setFormData(response.data || {});
+        })
+        .catch(error => {
+            console.error('Error fetching auction details:', error);
+        });
+
+
+}, [auctionId]);
+
   const handleUpdate = async () => {
     try {
-      const response = await api.put(`/auctions/${auction.id}`, {
+      const response = await api.put(`/auctions/${auctionId}`, {
         title,
         goal,
         startdate,
